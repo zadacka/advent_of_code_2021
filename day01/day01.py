@@ -1,7 +1,9 @@
+import numbers
 import os.path
 
 
 def count_increases(depths):
+    assert all(isinstance(depth, numbers.Number) for depth in depths)
     count = 0
     for previous, current in zip(depths, depths[1:]):
         if current > previous:
