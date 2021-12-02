@@ -41,16 +41,17 @@ def process_movement_file(movement_file):
     data = os.path.join(os.path.dirname(__file__), movement_file)
     with open(data) as f:
         movements = f.readlines()
+
     submarine = Submarine(aim_enabled=False)
     for movement in movements:
         submarine.do_movement(movement)
-    msg = "Final position is depth {} and horizontal_position {} for a product of {}"
+    msg = "Final position (of aimless submarine) is depth {} and horizontal_position {} for a product of {}"
     print(msg.format(submarine.depth, submarine.horizontal_position, submarine.depth * submarine.horizontal_position))
 
     submarine = Submarine(aim_enabled=True)
     for movement in movements:
         submarine.do_movement(movement)
-    msg = "Final position is depth {} and horizontal_position {} for a product of {}"
+    msg = "Final position (of aimed submarine) is depth {} and horizontal_position {} for a product of {}"
     print(msg.format(submarine.depth, submarine.horizontal_position, submarine.depth * submarine.horizontal_position))
 
 
