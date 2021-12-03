@@ -1,3 +1,4 @@
+import itertools
 import os
 
 
@@ -9,25 +10,18 @@ def get_readings(filename):
 
 
 def get_most_common(report_strings, tie_break=None):
-    count = [0] * len(report_strings[0])
-
-    for string in report_strings:
-        for index, char in enumerate(string):
-            count[index] += int(char)
-
-    halfway_value = len(report_strings) / 2.0
     result = ""
-    for c in count:
-        if c < halfway_value:
-            result += "0"
-        elif c > halfway_value:
+    for bits in zip(*report_strings):
+        number_of_ones = sum(b == "1" for b in bits)
+        halfway_point = len(bits) / 2.0
+        if number_of_ones > halfway_point:
             result += "1"
+        elif number_of_ones < halfway_point:
+            result += "0"
         else:
-            if tie_break:
-                result += tie_break
-            else:
-                raise ValueError("Number of '1's and '0s' balance, so 'most common' is not defined")
-
+            if tie_break is None:
+                raise ValueError("Equal numbers of 0s and 1s, and tie_break not set!!")
+            result += tie_break
     return result
 
 
