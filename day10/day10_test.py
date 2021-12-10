@@ -1,7 +1,7 @@
-from testfixtures import compare
+from testfixtures import compare, ShouldRaise
 
-from day10.day10 import load_day10_data, find_syntax_error_or_completion, syntax_score_data, score_completion, \
-    autocomplete_score_data
+from day10.day10 import load_day10_data, check_line, calculate_syntax_score, score_completion, \
+    calculate_autocomplete_score, AdventSyntaxError
 
 test_data = """\
 [({(<(())[]>[[{[]{<()<>>
@@ -20,24 +20,29 @@ def test_load_data():
     compare(load_day10_data("day10_test_data.txt"), expected=test_data)
 
 
-def test_find_syntax_error():
-    compare(find_syntax_error_or_completion("{([(<{}[<>[]}>{[]{[(<()>")[0], expected="}")
-    compare(find_syntax_error_or_completion("[[<[([]))<([[{}[[()]]]")[0], expected=")")
-    compare(find_syntax_error_or_completion("[{[{({}]{}}([{[{{{}}([]")[0], expected="]")
-    compare(find_syntax_error_or_completion("[<(<(<(<{}))><([]([]()")[0], expected=")")
-    compare(find_syntax_error_or_completion("<{([([[(<>()){}]>(<<{{")[0], expected=">")
+def test__check_line__raises_syntax_error():
+    with ShouldRaise(AdventSyntaxError("}")):
+        check_line("{([(<{}[<>[]}>{[]{[(<()>")
+    with ShouldRaise(AdventSyntaxError(")")):
+        check_line("[[<[([]))<([[{}[[()]]]")
+    with ShouldRaise(AdventSyntaxError("]")):
+        check_line("[{[{({}]{}}([{[{{{}}([]")
+    with ShouldRaise(AdventSyntaxError(")")):
+        check_line("[<(<(<(<{}))><([]([]()")
+    with ShouldRaise(AdventSyntaxError(">")):
+        check_line("<{([([[(<>()){}]>(<<{{")
 
 
 def test_syntax_score_data():
-    compare(syntax_score_data(test_data), expected=26397)
+    compare(calculate_syntax_score(test_data), expected=26397)
 
 
 def test_find_syntax_error_or_completion__getting_completion():
-    compare(find_syntax_error_or_completion("[({(<(())[]>[[{[]{<()<>>")[1], expected=[c for c in "}}]])})]"])
-    compare(find_syntax_error_or_completion("[(()[<>])]({[<{<<[]>>(")[1], expected=[c for c in ")}>]})"])
-    compare(find_syntax_error_or_completion("(((({<>}<{<{<>}{[]{[]{}")[1], expected=[c for c in "}}>}>))))"])
-    compare(find_syntax_error_or_completion("{<[[]]>}<{[{[{[]{()[[[]")[1], expected=[c for c in "]]}}]}]}>"])
-    compare(find_syntax_error_or_completion("<{([{{}}[<[[[<>{}]]]>[]]")[1], expected=[c for c in "])}>"])
+    compare(check_line("[({(<(())[]>[[{[]{<()<>>"), expected=[c for c in "}}]])})]"])
+    compare(check_line("[(()[<>])]({[<{<<[]>>("), expected=[c for c in ")}>]})"])
+    compare(check_line("(((({<>}<{<{<>}{[]{[]{}"), expected=[c for c in "}}>}>))))"])
+    compare(check_line("{<[[]]>}<{[{[{[]{()[[[]"), expected=[c for c in "]]}}]}]}>"])
+    compare(check_line("<{([{{}}[<[[[<>{}]]]>[]]"), expected=[c for c in "])}>"])
 
 
 def test_score_completion():
@@ -49,4 +54,4 @@ def test_score_completion():
 
 
 def test_autocomplete_score_data():
-    compare(autocomplete_score_data(test_data), expected=288957)
+    compare(calculate_autocomplete_score(test_data), expected=288957)
