@@ -1,5 +1,5 @@
 import os.path
-from collections import defaultdict, deque
+from collections import deque
 from operator import itemgetter
 
 
@@ -8,6 +8,22 @@ def load_risks(filename):
     with open(filepath) as f:
         risks = [[int(element) for element in line.strip()] for line in f.readlines()]
     return risks
+
+
+def embiggen_risks(risks, n=5):
+    rows = len(risks) * n
+    original_rows = len(risks)
+    original_cols = len(risks[0])
+    columns = len(risks[0]) * n
+    mega_risks = [[0] * columns for _ in range(rows)]
+    for row in range(rows):
+        for column in range(columns):
+            r_adjustment, r_idx = divmod(row, original_rows)
+            c_adjustment, c_idx = divmod(column, original_cols)
+            original = risks[r_idx][c_idx]
+            adjusted = original + r_adjustment + c_adjustment
+            mega_risks[row][column] = adjusted - 9 if adjusted > 9 else adjusted
+    return mega_risks
 
 
 def get_unverified_neighbours(node, unverified_nodes):
@@ -25,7 +41,7 @@ def get_unverified_neighbours(node, unverified_nodes):
 
 def get_path(risks):
     start_node = (0, 0)
-    end_node = (len(risks)-1, len(risks[0])-1)
+    end_node = (len(risks) - 1, len(risks[0]) - 1)
 
     previous = dict()
     accumulated_risk = dict()
@@ -63,10 +79,10 @@ def get_path(risks):
                 previous[neighbour] = node
 
 
-
 def get_vertex_in_unverified_nodes_with_min_risk(accumulated_risk, unverified_nodes):
     sorted_node_risks = sorted(accumulated_risk.items(), key=itemgetter(1), reverse=True)
     return [k for k, v in sorted_node_risks if k in unverified_nodes].pop()
+
 
 def score_path(path, risks):
     total = 0
@@ -75,8 +91,15 @@ def score_path(path, risks):
         total += risks[r][c]
     return total
 
+
 if __name__ == '__main__':
+    # risks = load_risks("day15_real_data.txt")
+    # path = get_path(risks)
+    # score = score_path(path, risks)
+    # print("The shortest path from start to finish has a risk of {}".format(score))
+
     risks = load_risks("day15_real_data.txt")
-    path = get_path(risks)
-    score = score_path(path, risks)
-    print("The shortest path from start to finish has a risk of {}".format(score))
+    embiggened_risks = embiggen_risks(risks)
+    path = get_path(embiggened_risks)
+    score = score_path(path, embiggened_risks)
+    print("The shortest path from start to finish for the BIG cave has a risk of {}".format(score))
