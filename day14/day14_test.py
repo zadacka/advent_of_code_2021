@@ -1,6 +1,6 @@
 from testfixtures import compare
 
-from day14.day14 import load_instructions, polymerize, score_polymer
+from day14.day14 import load_instructions, polymerize, score_polymer, polymerize_industrial
 
 test_template = "NNCB"
 test_pair_insertion_rules = {
@@ -53,7 +53,17 @@ def test_integration():
     compare(score_polymer(template), expected=1588)
 
 
+def test_polymerize_industrial():
+    """
+    NNCB ->     NCNBCHB ->           NBCCNBBBCBHCB
+    NN NC CB -> NC CN NB BC CH HB ->
+    """
+    actual = polymerize_industrial(test_template, test_pair_insertion_rules, 1)
+    compare(actual, expected={"N": 2, "C": 2, "B": 2, "H": 1})
 
-# def test_polymerize_industrial():
-#     actual = polymerize_industrial(test_template, test_pair_insertion_rules, 40)
-#     compare(actual, expected=[])
+    actual = polymerize_industrial(test_template, test_pair_insertion_rules, 2)
+    compare(actual, expected={"N": 2, "C": 4, "B": 6, "H": 1})
+
+    actual = polymerize_industrial(test_template, test_pair_insertion_rules, 40)
+    compare(actual["B"], expected=2192039569602)
+    compare(actual["H"], expected=3849876073)
