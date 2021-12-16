@@ -1,6 +1,6 @@
 from testfixtures import compare
 
-from day15.day15 import load_risks, get_path, score_path, embiggen_risks
+from day15.day15 import load_risks, get_path, score_path, embiggen_risks, get_path_astar
 
 test_risks = [
     [1, 1, 6, 3, 7, 5, 1, 7, 4, 2, ],
@@ -15,22 +15,6 @@ test_risks = [
     [2, 3, 1, 1, 9, 4, 4, 5, 8, 1, ],
 ]
 
-test_shortest_path_with_diagonals = [
-    (0, 0),
-    (1, 0),
-    (2, 1),
-    (2, 2),
-    (1, 3),
-    (1, 4),
-    (2, 5),
-    (3, 6),
-    (4, 7),
-    (5, 7),
-    (6, 8),
-    (7, 8),
-    (8, 9),
-    (9, 9),
-]
 
 test_shortest_path = [
     (0, 0),
@@ -132,3 +116,16 @@ def test_big_risks():
     big_risks = embiggen_risks(test_risks)
     path = get_path(big_risks)
     compare(score_path(path, big_risks), expected=315)
+
+def test_using_pathlib():
+    from pathfinding.finder.a_star import AStarFinder
+    from pathfinding.finder.dijkstra import DijkstraFinder
+    from pathfinding.core.grid import Grid
+
+    grid = Grid(matrix=test_risks)
+    start = grid.node(0, 0)
+    end = grid.node(len(test_risks)-1, len(test_risks)-1)
+    finder = AStarFinder()
+    path, runs = finder.find_path(start, end, grid)
+    flipped_path = [(r, c) for c, r in path]
+    compare(flipped_path, expected=test_shortest_path)
