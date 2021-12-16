@@ -114,7 +114,7 @@ def test_embiggen_risks():
 
 def test_big_risks():
     big_risks = embiggen_risks(test_risks)
-    path = get_path(big_risks)
+    path = get_path_astar(big_risks)
     compare(score_path(path, big_risks), expected=315)
 
 def test_using_pathlib():

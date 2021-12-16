@@ -38,6 +38,15 @@ def get_unverified_neighbours(node, unverified_nodes):
     }
     return unverified_nodes.intersection(potential_neighbours)
 
+def get_valid_neighbours(node, end):
+    r, c = node
+    potential_neighbours = {
+        (r, c - 1),
+        (r, c - 1), (r + 1, c),
+        (r, c + 1),
+    }
+    return [n for n in potential_neighbours if (0<= n[0] <= end[0] and 0<= n[1] <= end[1])]
+
 
 def get_path(risks):
     start_node = (0, 0)
@@ -104,7 +113,6 @@ def get_path_astar(risks):
             node = (row_index, column_index)
             unverified_nodes.add(node)
             risk_lookup[node] = element
-            accumulated_risk[node] = float("inf")
             previous[node] = None
 
     accumulated_risk[start_node] = 0
@@ -123,9 +131,9 @@ def get_path_astar(risks):
             return list(path)
 
         unverified_nodes.remove(node)
-        for neighbour in get_unverified_neighbours(node, unverified_nodes):
+        for neighbour in get_valid_neighbours(node, end_node):
             this_risk = accumulated_risk[node] + risk_lookup[neighbour]
-            if this_risk < accumulated_risk[neighbour]:
+            if neighbour not in accumulated_risk or this_risk < accumulated_risk[neighbour]:
                 accumulated_risk[neighbour] = this_risk + heuristic(neighbour, end_node)
                 previous[neighbour] = node
 
