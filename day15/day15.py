@@ -29,14 +29,12 @@ def embiggen_risks(risks, n=5):
 def get_unverified_neighbours(node, unverified_nodes):
     r, c = node
     potential_neighbours = {
-        # (r - 1, c - 1), (r, c - 1), (r + 1, c),
-        # (r, c - 1), (r + 1, c),
-        # (r - 1, c + 1), (r, c + 1), (r + 1, c + 1),
         (r, c - 1),
         (r, c - 1), (r + 1, c),
         (r, c + 1),
     }
     return unverified_nodes.intersection(potential_neighbours)
+
 
 def get_valid_neighbours(node, end):
     r, c = node
@@ -45,7 +43,7 @@ def get_valid_neighbours(node, end):
         (r, c - 1), (r + 1, c),
         (r, c + 1),
     }
-    return [n for n in potential_neighbours if (0<= n[0] <= end[0] and 0<= n[1] <= end[1])]
+    return [n for n in potential_neighbours if (0 <= n[0] <= end[0] and 0 <= n[1] <= end[1])]
 
 
 def get_path(risks):
@@ -68,7 +66,7 @@ def get_path(risks):
     accumulated_risk[start_node] = 0
 
     while unverified_nodes:
-        node = get_vertex_in_unverified_nodes_with_min_risk(accumulated_risk, unverified_nodes)
+        node = pick_next_node(accumulated_risk, unverified_nodes)
 
         if node == end_node:
             path = deque()
@@ -88,7 +86,7 @@ def get_path(risks):
                 previous[neighbour] = node
 
 
-def get_vertex_in_unverified_nodes_with_min_risk(accumulated_risk, unverified_nodes):
+def pick_next_node(accumulated_risk, unverified_nodes):
     sorted_node_risks = sorted(accumulated_risk.items(), key=itemgetter(1), reverse=True)
     return [k for k, v in sorted_node_risks if k in unverified_nodes].pop()
 
@@ -97,45 +95,6 @@ def heuristic(neighbour, end_node):
     x1, y1 = neighbour
     x2, y2 = end_node
     return abs(x1 - x2) + abs(y1 - y2)
-
-
-def get_path_astar(risks):
-    start_node = (0, 0)
-    end_node = (len(risks) - 1, len(risks[0]) - 1)
-
-    previous = dict()
-    accumulated_risk = dict()
-    risk_lookup = dict()
-
-    unverified_nodes = set()
-    for row_index, row in enumerate(risks):
-        for column_index, element in enumerate(row):
-            node = (row_index, column_index)
-            unverified_nodes.add(node)
-            risk_lookup[node] = element
-            previous[node] = None
-
-    accumulated_risk[start_node] = 0
-
-    while unverified_nodes:
-        node = get_vertex_in_unverified_nodes_with_min_risk(accumulated_risk, unverified_nodes)
-
-        if node == end_node:
-            path = deque()
-            path.append(end_node)
-            previous_node = previous[node]
-            while previous_node != start_node:
-                path.appendleft(previous_node)
-                previous_node = previous[previous_node]
-            path.appendleft(start_node)
-            return list(path)
-
-        unverified_nodes.remove(node)
-        for neighbour in get_valid_neighbours(node, end_node):
-            this_risk = accumulated_risk[node] + risk_lookup[neighbour]
-            if neighbour not in accumulated_risk or this_risk < accumulated_risk[neighbour]:
-                accumulated_risk[neighbour] = this_risk + heuristic(neighbour, end_node)
-                previous[neighbour] = node
 
 
 def score_path(path, risks):
@@ -182,17 +141,17 @@ def score_path(path, risks):
 
 if __name__ == '__main__':
     # PART 1
-    # risks = load_risks("day15_real_data.txt")
-    # path = get_path(risks)
-    # score = score_path(path, risks)
-    # print("The shortest path from start to finish has a risk of {}".format(score))
+    risks = load_risks("day15_real_data.txt")
+    path = get_path(risks)
+    score = score_path(path, risks)
+    print("The shortest path from start to finish has a risk of {}".format(score))
 
     # PART 2 (too slow)
-    risks = load_risks("day15_real_data.txt")
-    embiggened_risks = embiggen_risks(risks)
-    path = get_path_astar(embiggened_risks)
-    score = score_path(path, embiggened_risks)
-    print("The shortest path from start to finish for the BIG cave has a risk of {}".format(score))
+    # risks = load_risks("day15_real_data.txt")
+    # embiggened_risks = embiggen_risks(risks)
+    # path = get_path_astar(embiggened_risks)
+    # score = score_path(path, embiggened_risks)
+    # print("The shortest path from start to finish for the BIG cave has a risk of {}".format(score))
 
     #  PART 2 Proof of Concept (different solver = managealbe solution)
     # from pathfinding.finder.a_star import AStarFinder

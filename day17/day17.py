@@ -1,6 +1,3 @@
-target_area = 288, 330, -96, -50  # x range, y range
-
-
 def replace(string, position, character):
     return string[:position] + character + string[position + 1:]
 
@@ -11,6 +8,9 @@ class Target:
         self.x_max = x_max
         self.y_min = y_min
         self.y_max = y_max
+
+    def within_target(self, x, y):
+        return self.x_min <= x <= self.x_max and self.y_min <= y <= self.y_max
 
 
 class Probe:
@@ -35,22 +35,18 @@ class Probe:
 
     @property
     def lands_inside_target(self):
-        def within_target(x, y):
-            return self.target.x_min <= x <= self.target.x_max and self.target.y_min <= y <= self.target.y_max
-
-        return any(within_target(x, y) for x, y in self.trajectory)
+        return any(self.target.within_target(x, y) for x, y in self.trajectory)
 
     @property
     def _in_bounds(self):
-        return self.x_position < self.target.x_max and self.y_position > self.target.y_min
+        return 0 <= self.x_position < self.target.x_max and self.y_position > self.target.y_min
 
     def print_trajectory(self):
         max_x = self.target.x_max + 1
         max_y = max(y for x, y in self.trajectory)
-        min_x = 0
         min_y = self.target.y_min - 1
 
-        offset = max_y
+        offset = max(0, max_y)  # if extra lines if the trajectory goes above y == 0
         array = ["." * max_x for _ in range(offset - min_y)]
 
         for y in range(offset - self.target.y_max, 1 + offset - self.target.y_min):
@@ -70,17 +66,19 @@ class Probe:
 
 
 def calculate_metrics(target_zone, max_x_velocity=350, max_y_velocity=500):
-    # ugly brute force approach
-    hits = dict()
+    """ This is an ugly (but functional) brute force approach..."""
+    successful_probes = set()
     for x_velocity in range(0, max_x_velocity):
         for y_velocity in range(-max_y_velocity, max_y_velocity):
             probe = Probe(x_velocity, y_velocity, target_zone)
             if probe.lands_inside_target:
-                hits[(x_velocity, y_velocity)] = max(y for x, y in probe.trajectory)
-    return max(v for v in hits.values()), len(hits)
+                successful_probes.add(probe)
+    max_y = max(y for probe in successful_probes for _, y in probe.trajectory)
+    return max_y, len(successful_probes)
 
 
 if __name__ == '__main__':
+    target_area = 288, 330, -96, -50  # x range, y range
     max_height, total_hits = calculate_metrics(target_area)
     print(f"Max height reached: {max_height}")
     print(f"There are {total_hits} different initial velocities which would hit the target.")
