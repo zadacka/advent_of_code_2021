@@ -1,6 +1,6 @@
 from testfixtures import compare
 
-from day18.day18 import snailfish_add, can_explode, can_split, explode, split
+from day18.day18 import snailfish_add, can_explode, can_split, explode, split, add_at_index
 
 
 def test__addition():
@@ -19,6 +19,48 @@ def test__can_split():
     compare(can_split([[[[0, 7], 4], [15, [0, 13]]], [1, 1]]), expected=True)
     compare(can_split([[[[0, 7], 4], [[7, 8], [0, 13]]], [1, 1]]), expected=True)
     compare(can_split([[[[0, 7], 4], [[7, 8], [0, [6, 7]]]], [1, 1]]), expected=False)
+
+
+def test__add_at_index():
+    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    add_at_index(initial, target_index=0, to_add=1)
+    compare(initial, expected=[[[[[1, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]])
+
+    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    add_at_index(initial, target_index=1, to_add=1)
+    compare(initial, expected=[[[[[0, 2], 2], 3], [4, [[5, 6], 7]]], [8, 9]])
+
+    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    add_at_index(initial, target_index=2, to_add=1)
+    compare(initial, expected=[[[[[0, 1], 3], 3], [4, [[5, 6], 7]]], [8, 9]])
+
+    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    add_at_index(initial, target_index=3, to_add=1)
+    compare(initial, expected=[[[[[0, 1], 2], 4], [4, [[5, 6], 7]]], [8, 9]])
+
+    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    add_at_index(initial, target_index=4, to_add=1)
+    compare(initial, expected=[[[[[0, 1], 2], 3], [5, [[5, 6], 7]]], [8, 9]])
+
+    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    add_at_index(initial, target_index=5, to_add=1)
+    compare(initial, expected=[[[[[0, 1], 2], 3], [4, [[6, 6], 7]]], [8, 9]])
+
+    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    add_at_index(initial, target_index=6, to_add=1)
+    compare(initial, expected=[[[[[0, 1], 2], 3], [4, [[5, 7], 7]]], [8, 9]])
+
+    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    add_at_index(initial, target_index=7, to_add=1)
+    compare(initial, expected=[[[[[0, 1], 2], 3], [4, [[5, 6], 8]]], [8, 9]])
+
+    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    add_at_index(initial, target_index=8, to_add=1)
+    compare(initial, expected=[[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [9, 9]])
+
+    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    add_at_index(initial, target_index=9, to_add=1)
+    compare(initial, expected=[[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 10]])
 
 
 def test__various_operations():
