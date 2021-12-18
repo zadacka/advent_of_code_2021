@@ -1,3 +1,4 @@
+import math
 from copy import deepcopy
 
 def iter_flatten(iterable):
@@ -76,6 +77,19 @@ def add_at_index(candidate, target_index, to_add, global_index=0):
     return global_index
 
 
+def split_at_index(candidate, target_index, global_index=0):
+    for local_index, element in enumerate(candidate):
+        if global_index == target_index and isinstance(element, int):
+            candidate[local_index] = [math.floor(element/2.0), math.ceil(element/2.0)]
+
+        if isinstance(element, list):
+            result = split_at_index(element, target_index, global_index)
+            global_index = result  # we already count the list as one element
+        else:
+            global_index += 1
+    return global_index
+
+
 def find_at_index(candidate, target_index, ):
     """ get the left/right index pair to be exploded from index with global_index == target_index"""
     flat = list(iter_flatten(candidate))
@@ -97,8 +111,20 @@ def explode(candidate):
     return candidate
 
 
+def find_split_index(candidate):
+    flat = iter_flatten(candidate)
+
+    big_values = []
+    for i, v in enumerate(flat):
+        if v >= 10:
+            big_values.append(i)
+    return big_values[0]
+
 def split(candidate):
-    return candidate
+    local_copy = deepcopy(candidate)
+    split_index = find_split_index(local_copy)
+    split_at_index(local_copy, split_index)
+    return local_copy
 
 
 def snailfish_reduce(candidate):

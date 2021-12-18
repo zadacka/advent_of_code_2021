@@ -70,6 +70,19 @@ def test__find_at_index():
     compare(find_at_index(initial, 5), expected=(5, 6))
     compare(find_at_index(initial, 8), expected=(8, 9))
 
+def test__split():
+    initial = [[[[[11, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    split(initial)
+    compare(initial, expected=[[[[[[5, 6], 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]])
+
+    initial = [[[[[0, 1], 2], 3], [11, [[5, 6], 7]]], [8, 9]]
+    split(initial)
+    compare(initial, expected=[[[[[0, 1], 2], 3], [[5, 6], [[5, 6], 7]]], [8, 9]])
+
+    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 11]]
+    split(initial)
+    compare(initial, expected=[[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, [5, 6]]])
+
 
 def test__clear_at_index():
     initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
@@ -86,14 +99,14 @@ def test__clear_at_index():
 
 
 def test__various_operations():
-    v1 = [[[[[4, 3], 4], 4], [7, [[8, 4], 9]]], [1, 1]]  #
-    v2 = [[[[0, 7], 4], [7, [[8, 4], 9]]], [1, 1]]  # after explode
+    v1 = [[[[[4, 3], 4], 4], [7, [[8, 4], 9]]], [1, 1]]
+    v2 = [[[[0, 7], 4], [7, [[8, 4], 9]]], [1, 1]]
     compare(explode(v1), expected=v2)
-    v3 = [[[[0, 7], 4], [15, [0, 13]]], [1, 1]]  # after explode
+    v3 = [[[[0, 7], 4], [15, [0, 13]]], [1, 1]]
     compare(explode(v2), expected=v3)
-    v4 = [[[[0, 7], 4], [[7, 8], [0, 13]]], [1, 1]]  # after split
+    v4 = [[[[0, 7], 4], [[7, 8], [0, 13]]], [1, 1]]
     compare(split(v3), expected=v4)
-    v5 = [[[[0, 7], 4], [[7, 8], [0, [6, 7]]]], [1, 1]]  # after split
+    v5 = [[[[0, 7], 4], [[7, 8], [0, [6, 7]]]], [1, 1]]
     compare(split(v4), expected=v5)
-    v6 = [[[[0, 7], 4], [[7, 8], [6, 0]]], [8, 1]]  # after explode
+    v6 = [[[[0, 7], 4], [[7, 8], [6, 0]]], [8, 1]]
     compare(explode(v5), expected=v6)
