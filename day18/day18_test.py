@@ -6,8 +6,7 @@ from day18.day18 import snailfish_add, can_explode, can_split, explode, split, a
 
 def test__addition():
     expected = [[[[0, 7], 4], [[7, 8], [6, 0]]], [8, 1]]
-    actual = snailfish_add([[[[4, 3], 4], 4], [7, [[8, 4], 9]]], [1, 1])
-    compare(actual, expected=expected)
+    compare(snailfish_add([[[[4, 3], 4], 4], [7, [[8, 4], 9]]], [1, 1]), expected=expected)
 
 
 def test__can_explode():
@@ -70,18 +69,22 @@ def test__find_at_index():
     compare(find_at_index(initial, 5), expected=(5, 6))
     compare(find_at_index(initial, 8), expected=(8, 9))
 
+
 def test__split():
-    initial = [[[[[11, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
-    split(initial)
-    compare(initial, expected=[[[[[[5, 6], 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]])
+    compare(
+        split([[[[[11, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]),
+        expected=[[[[[[5, 6], 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    )
 
-    initial = [[[[[0, 1], 2], 3], [11, [[5, 6], 7]]], [8, 9]]
-    split(initial)
-    compare(initial, expected=[[[[[0, 1], 2], 3], [[5, 6], [[5, 6], 7]]], [8, 9]])
+    compare(
+        split([[[[[0, 1], 2], 3], [11, [[5, 6], 7]]], [8, 9]]),
+        expected=[[[[[0, 1], 2], 3], [[5, 6], [[5, 6], 7]]], [8, 9]]
+    )
 
-    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 11]]
-    split(initial)
-    compare(initial, expected=[[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, [5, 6]]])
+    compare(
+        split([[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 11]]),
+        expected=[[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, [5, 6]]]
+    )
 
 
 def test__clear_at_index():

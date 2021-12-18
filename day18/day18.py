@@ -138,4 +138,4 @@ def snailfish_reduce(candidate):
 
 
 def snailfish_add(first, second):
-    return snailfish_reduce(first + second)
+    return snailfish_reduce([first] + [second])
