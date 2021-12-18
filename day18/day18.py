@@ -1,5 +1,15 @@
 from copy import deepcopy
 
+def iter_flatten(iterable):
+    """ stolen - credit goes to http://rightfootin.blogspot.com/2006/09/more-on-python-flatten.html """
+    it = iter(iterable)
+    for e in it:
+        if isinstance(e, (list, tuple)):
+            for f in iter_flatten(e):
+                yield f
+        else:
+            yield e
+
 
 def can_explode(candidate):
     """If any pair is nested inside four pairs, the leftmost such pair explodes. """
@@ -37,22 +47,20 @@ def find_explode_index(candidate, index_so_far=0, depth=0):
         index_so_far += 1
 
 
-def explodable(element):
-    return isinstance(element, list) and len(element) == 2 and isinstance(element[0], int) and isinstance(element[1],
-                                                                                                          int)
+def element_is_two_int_list(e):
+    return isinstance(e, list) and len(e) == 2 and isinstance(e[0], int) and isinstance(e[1], int)
 
 
-def clear_at_index(candidate, explode_index):
+def clear_at_index(candidate, target_index, global_index=0):
     for index, element in enumerate(candidate):
-        if index == explode_index and explodable(element):
+        if global_index == target_index and element_is_two_int_list(element):
             candidate[index] = 0
-            return True
 
         if isinstance(element, list):
-            result = clear_at_index(element, explode_index - index)
-            if result:
-                return True
-        explode_index -= 1
+            global_index = clear_at_index(element, target_index, global_index)
+        else:
+            global_index += 1
+    return global_index
 
 
 def add_at_index(candidate, target_index, to_add, global_index=0):
@@ -68,16 +76,10 @@ def add_at_index(candidate, target_index, to_add, global_index=0):
     return global_index
 
 
-def find_at_index(candidate, explode_index):
-    if explode_index == 0 and isinstance(candidate[0], int):
-        return candidate
-
-    for index, element in enumerate(candidate):
-        if isinstance(element, list):
-            result = find_at_index(element, explode_index - index)
-            if result:
-                return result
-        explode_index -= 1
+def find_at_index(candidate, target_index, ):
+    """ get the left/right index pair to be exploded from index with global_index == target_index"""
+    flat = list(iter_flatten(candidate))
+    return flat[target_index:target_index+2]
 
 
 def explode(candidate):

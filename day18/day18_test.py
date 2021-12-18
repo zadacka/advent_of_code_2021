@@ -1,6 +1,7 @@
 from testfixtures import compare
 
-from day18.day18 import snailfish_add, can_explode, can_split, explode, split, add_at_index
+from day18.day18 import snailfish_add, can_explode, can_split, explode, split, add_at_index, find_at_index, \
+    clear_at_index
 
 
 def test__addition():
@@ -61,6 +62,27 @@ def test__add_at_index():
     initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
     add_at_index(initial, target_index=9, to_add=1)
     compare(initial, expected=[[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 10]])
+
+
+def test__find_at_index():
+    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    compare(find_at_index(initial, 0), expected=(0, 1))
+    compare(find_at_index(initial, 5), expected=(5, 6))
+    compare(find_at_index(initial, 8), expected=(8, 9))
+
+
+def test__clear_at_index():
+    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    clear_at_index(initial, target_index=0)
+    compare(initial, expected=[[[[0, 2], 3], [4, [[5, 6], 7]]], [8, 9]])
+
+    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    clear_at_index(initial, target_index=5)
+    compare(initial, expected=[[[[[0, 1], 2], 3], [4, [0, 7]]], [8, 9]])
+
+    initial = [[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], [8, 9]]
+    clear_at_index(initial, target_index=8)
+    compare(initial, expected=[[[[[0, 1], 2], 3], [4, [[5, 6], 7]]], 0])
 
 
 def test__various_operations():
