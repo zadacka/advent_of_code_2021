@@ -1,4 +1,5 @@
 import math
+import os
 from copy import deepcopy
 
 def iter_flatten(iterable):
@@ -36,16 +37,17 @@ def can_split(candidate):
     return recursive_max(candidate) >= 10
 
 
-def find_explode_index(candidate, index_so_far=0, depth=0):
-    if depth == 4:  # termination condition - we have found the 'absolute' index where depth == 4
-        return index_so_far
+def find_explode_index(candidate, global_index=0, depth=0, result=None):
+    if depth == 4 and result[0] is None:  # termination condition hit for the first time
+        result[0] = global_index
 
-    for index, element in enumerate(candidate):
+    for element in candidate:
         if isinstance(element, list):
-            location = find_explode_index(element, index_so_far + index, depth + 1)
-            if location is not None:
-                return location
-        index_so_far += 1
+            global_index = find_explode_index(element, global_index, depth + 1, result=result)
+        else:
+            global_index += 1
+
+    return global_index
 
 
 def element_is_two_int_list(e):
@@ -93,6 +95,7 @@ def split_at_index(candidate, target_index, global_index=0):
 def find_at_index(candidate, target_index, ):
     """ get the left/right index pair to be exploded from index with global_index == target_index"""
     flat = list(iter_flatten(candidate))
+    flat.append(0)  # in the event that we 'explode' off the end of a list - placeholder zero (not used)
     return flat[target_index:target_index+2]
 
 
@@ -103,7 +106,9 @@ def explode(candidate):
     * the pair's right value is added to the first regular number to the right of the exploding pair (if any).
     * Then, the entire exploding pair is replaced with the regular number 0.
     """
-    explode_index = find_explode_index(candidate)
+    updated = [None]
+    find_explode_index(candidate, result=updated)
+    explode_index = updated[0]
     left, right = find_at_index(candidate, explode_index)
     clear_at_index(candidate, explode_index)
     add_at_index(candidate, explode_index - 1, left)
@@ -139,3 +144,18 @@ def snailfish_reduce(candidate):
 
 def snailfish_add(first, second):
     return snailfish_reduce([first] + [second])
+
+def final_sum(list):
+    total = None
+    for num in list:
+        if total is None:
+            total = num
+        else:
+            total = snailfish_add(total, num)
+    return total
+
+
+# def load_data(filename):
+#     filepath = os.path.join(os.path.dirname(__file__), filename)
+#     with open(filepath) as f:
+#

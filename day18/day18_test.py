@@ -1,7 +1,7 @@
 from testfixtures import compare
 
 from day18.day18 import snailfish_add, can_explode, can_split, explode, split, add_at_index, find_at_index, \
-    clear_at_index
+    clear_at_index, final_sum, find_explode_index
 
 
 def test__addition():
@@ -13,6 +13,36 @@ def test__can_explode():
     compare(can_explode([[[[[4, 3], 4], 4], [7, [[8, 4], 9]]], [1, 1]]), expected=True)
     compare(can_explode([[[[0, 7], 4], [7, [[8, 4], 9]]], [1, 1]]), expected=True)
     compare(can_explode([[[[0, 7], 4], [15, [0, 13]]], [1, 1]]), expected=False)
+
+
+def test__find_explode_index():
+    result = [None]
+    find_explode_index([[[[[9, 8], 1], 2], 3], 4], result=result)
+    compare(result[0], expected=0)
+
+    result = [None]
+    find_explode_index([7, [6, [5, [4, [3, 2]]]]], result=result)
+    compare(result[0], expected=4)
+
+    result = [None]
+    find_explode_index([[6, [5, [4, [3, 2]]]], 1], result=result)
+    compare(result[0], expected=3)
+
+    result = [None]
+    find_explode_index([[3, [2, [1, [7, 3]]]], [6, [5, [4, [3, 2]]]]], result=result)
+    compare(result[0], expected=3)
+
+    result = [None]
+    find_explode_index([[3, [2, [8, 0]]], [9, [5, [4, [3, 2]]]]], result=result)
+    compare(result[0], expected=7)
+
+
+def test__explode():
+    compare(explode([[[[[9, 8], 1], 2], 3], 4]), expected=[[[[0, 9], 2], 3], 4])
+    compare(explode([7, [6, [5, [4, [3, 2]]]]]), expected=[7, [6, [5, [7, 0]]]])
+    compare(explode([[6, [5, [4, [3, 2]]]], 1]), expected=[[6, [5, [7, 0]]], 3])
+    compare(explode([[3, [2, [1, [7, 3]]]], [6, [5, [4, [3, 2]]]]]), expected=[[3, [2, [8, 0]]], [9, [5, [4, [3, 2]]]]])
+    compare(explode([[3, [2, [8, 0]]], [9, [5, [4, [3, 2]]]]]), expected=[[3, [2, [8, 0]]], [9, [5, [7, 0]]]])
 
 
 def test__can_split():
@@ -113,3 +143,9 @@ def test__various_operations():
     compare(split(v4), expected=v5)
     v6 = [[[[0, 7], 4], [[7, 8], [6, 0]]], [8, 1]]
     compare(explode(v5), expected=v6)
+
+
+def test_various():
+    compare(final_sum([[[[1, 1], [2, 2]], [3, 3]], [4, 4]]), expected=[[[[1, 1], [2, 2]], [3, 3]], [4, 4]])
+    compare(final_sum([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]), expected=[[[[3, 0], [5, 3]], [4, 4]], [5, 5]])
+    compare(final_sum([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6]]), expected= [[[[5,0],[7,4]],[5,5]],[6,6]])
