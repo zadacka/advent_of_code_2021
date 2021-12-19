@@ -1,7 +1,5 @@
-rom testfixtures import compare
+from copy import deepcopy
 
-from day18.day18 import snailfish_add, can_explode, can_split, explode, split, add_at_index, find_at_index, \
-    clear_at_index, final_sum, find_explode_index, calculate_magnitude, find_largest
 from testfixtures import compare
 
 from day18.day18 import snailfish_add, can_explode, can_split, explode, split, add_at_index, find_at_index, \
@@ -179,7 +177,7 @@ test_assignment = [
 
 
 def test__sample_homework():
-    compare(final_sum(test_assignment), [[[[6, 6], [7, 6]], [[7, 7], [7, 0]]], [[[7, 7], [7, 7]], [[7, 8], [9, 9]]]])
+    compare(final_sum(deepcopy(test_assignment)), [[[[6, 6], [7, 6]], [[7, 7], [7, 0]]], [[[7, 7], [7, 7]], [[7, 8], [9, 9]]]])
     compare(calculate_magnitude([[[[6, 6], [7, 6]], [[7, 7], [7, 0]]], [[[7, 7], [7, 7]], [[7, 8], [9, 9]]]]),
             expected=4140)
 
