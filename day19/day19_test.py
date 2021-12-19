@@ -1,6 +1,7 @@
 from testfixtures import compare
 
-from day19.day19 import load_day19_data, generate_permutations, find_translation, register_beacons
+from day19.day19 import load_day19_data, generate_permutations, find_translation, register_beacons, \
+    calculate_manhattan_distance, calculate_max_manhattan_distance
 
 
 def test__load_day19_data():
@@ -84,7 +85,25 @@ def test_find_translation():
     compare(found_translation, expected=(68, -1246, -43))
 
 
-def test_register_beacons():
+def test__register_beacons():
     beacons_by_scanner = load_day19_data("day19_test_data.txt")
-    registered = register_beacons(beacons_by_scanner)
-    compare(len(registered), expected=79)
+    registered_beacons, _ = register_beacons(beacons_by_scanner)
+    compare(len(registered_beacons), expected=79)
+
+
+def test__register_beacons_scanner_positions():
+    beacons_by_scanner = load_day19_data("day19_test_data.txt")
+    _, scanner_positions = register_beacons(beacons_by_scanner)
+    compare(scanner_positions[0], expected=(0, 0, 0))
+    compare(scanner_positions[2], expected=(1105, -1205, 1229))
+    compare(scanner_positions[3], expected=(-92, -2380, -20))
+
+
+def test_manhattan_distances():
+    compare(calculate_manhattan_distance((1105, -1205, 1229), (-92, -2380, -20)), expected=3621)
+
+
+def test_calculate_max_manhattan_distance():
+    scanners_positions = {0: (0, 0, 0), 1: (68, -1246, -43), 3: (-92, -2380, -20), 4: (-20, -1133, 1061),
+                          2: (1105, -1205, 1229)}
+    compare(calculate_max_manhattan_distance(scanners_positions), expected=3621)
