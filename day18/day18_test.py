@@ -1,7 +1,11 @@
+rom testfixtures import compare
+
+from day18.day18 import snailfish_add, can_explode, can_split, explode, split, add_at_index, find_at_index, \
+    clear_at_index, final_sum, find_explode_index, calculate_magnitude, find_largest
 from testfixtures import compare
 
 from day18.day18 import snailfish_add, can_explode, can_split, explode, split, add_at_index, find_at_index, \
-    clear_at_index, final_sum, find_explode_index, calculate_magnitude, magnitude
+    clear_at_index, final_sum, find_explode_index, calculate_magnitude, find_largest
 
 
 def test__addition():
@@ -173,6 +177,13 @@ test_assignment = [
     [[[[5, 2], 5], [8, [3, 7]]], [[5, [7, 5]], [4, 4]]],
 ]
 
+
 def test__sample_homework():
     compare(final_sum(test_assignment), [[[[6, 6], [7, 6]], [[7, 7], [7, 0]]], [[[7, 7], [7, 7]], [[7, 8], [9, 9]]]])
-    compare(calculate_magnitude([[[[6, 6], [7, 6]], [[7, 7], [7, 0]]], [[[7, 7], [7, 7]], [[7, 8], [9, 9]]]]), expected=4140)
+    compare(calculate_magnitude([[[[6, 6], [7, 6]], [[7, 7], [7, 0]]], [[[7, 7], [7, 7]], [[7, 8], [9, 9]]]]),
+            expected=4140)
+
+
+def test_find_largest():
+    max_value = find_largest(test_assignment)
+    compare(max_value, expected=3993)

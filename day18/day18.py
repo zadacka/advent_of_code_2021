@@ -1,7 +1,7 @@
 import copy
 import math
-import os
 from copy import deepcopy
+from itertools import permutations
 
 
 def iter_flatten(iterable):
@@ -182,6 +182,14 @@ def calculate_magnitude(sailfish_number):
             return magnitude(local_number)
 
 
+def find_largest(assignment):
+    results = []
+    for A, B in permutations(assignment, 2):
+        result = calculate_magnitude(snailfish_add(deepcopy(A), deepcopy(B)))
+        results.append(result)
+    return max(results)
+
+
 if __name__ == '__main__':
     assignment = [
         [[[[0, 6], [8, 7]], [2, 3]], [3, [[6, 5], [0, 0]]]],
@@ -285,6 +293,9 @@ if __name__ == '__main__':
         [7, [3, [4, [2, 3]]]],
         [0, 9],
     ]
-    total = final_sum(assignment)
+    total = final_sum(deepcopy(assignment))
     total_magnitude = calculate_magnitude(total)
     print(f"The assignment has a magnitude of {total_magnitude}")
+
+    max_value = find_largest(deepcopy(assignment))
+    print(f"The max possible magnitude is {max_value}")
