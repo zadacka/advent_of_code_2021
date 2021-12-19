@@ -3,7 +3,7 @@ from copy import deepcopy
 from testfixtures import compare
 
 from day18.day18 import snailfish_add, can_explode, can_split, explode, split, add_at_index, find_at_index, \
-    clear_at_index, final_sum, find_explode_index, calculate_magnitude, find_largest
+    clear_at_index, final_sum, find_explode_index, calculate_magnitude, find_largest, load_day18_data
 
 
 def test__addition():
@@ -175,6 +175,8 @@ test_assignment = [
     [[[[5, 2], 5], [8, [3, 7]]], [[5, [7, 5]], [4, 4]]],
 ]
 
+def test_load_data():
+    compare(load_day18_data("day18_test_data.txt"), expected=test_assignment)
 
 def test__sample_homework():
     compare(final_sum(deepcopy(test_assignment)), [[[[6, 6], [7, 6]], [[7, 7], [7, 0]]], [[[7, 7], [7, 7]], [[7, 8], [9, 9]]]])
