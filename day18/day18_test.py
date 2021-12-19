@@ -1,7 +1,7 @@
 from testfixtures import compare
 
 from day18.day18 import snailfish_add, can_explode, can_split, explode, split, add_at_index, find_at_index, \
-    clear_at_index, final_sum, find_explode_index
+    clear_at_index, final_sum, find_explode_index, calculate_magnitude, magnitude
 
 
 def test__addition():
@@ -148,4 +148,31 @@ def test__various_operations():
 def test_various():
     compare(final_sum([[[[1, 1], [2, 2]], [3, 3]], [4, 4]]), expected=[[[[1, 1], [2, 2]], [3, 3]], [4, 4]])
     compare(final_sum([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]), expected=[[[[3, 0], [5, 3]], [4, 4]], [5, 5]])
-    compare(final_sum([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6]]), expected= [[[[5,0],[7,4]],[5,5]],[6,6]])
+    compare(final_sum([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6]]), expected=[[[[5, 0], [7, 4]], [5, 5]], [6, 6]])
+
+
+def test_calculate_magnitude():
+    compare(calculate_magnitude([[1, 2], [[3, 4], 5]]), expected=143)
+    compare(calculate_magnitude([[[[0, 7], 4], [[7, 8], [6, 0]]], [8, 1]]), expected=1384)
+    compare(calculate_magnitude([[[[1, 1], [2, 2]], [3, 3]], [4, 4]]), expected=445)
+    compare(calculate_magnitude([[[[3, 0], [5, 3]], [4, 4]], [5, 5]]), expected=791)
+    compare(calculate_magnitude([[[[5, 0], [7, 4]], [5, 5]], [6, 6]]), expected=1137)
+    compare(calculate_magnitude([[[[8, 7], [7, 7]], [[8, 6], [7, 7]]], [[[0, 7], [6, 6]], [8, 7]]]), expected=3488)
+
+
+test_assignment = [
+    [[[0, [5, 8]], [[1, 7], [9, 6]]], [[4, [1, 2]], [[1, 4], 2]]],
+    [[[5, [2, 8]], 4], [5, [[9, 9], 0]]],
+    [6, [[[6, 2], [5, 6]], [[7, 6], [4, 7]]]],
+    [[[6, [0, 7]], [0, 9]], [4, [9, [9, 0]]]],
+    [[[7, [6, 4]], [3, [1, 3]]], [[[5, 5], 1], 9]],
+    [[6, [[7, 3], [3, 2]]], [[[3, 8], [5, 7]], 4]],
+    [[[[5, 4], [7, 7]], 8], [[8, 3], 8]],
+    [[9, 3], [[9, 9], [6, [4, 9]]]],
+    [[2, [[7, 7], 7]], [[5, 8], [[9, 3], [0, 2]]]],
+    [[[[5, 2], 5], [8, [3, 7]]], [[5, [7, 5]], [4, 4]]],
+]
+
+def test__sample_homework():
+    compare(final_sum(test_assignment), [[[[6, 6], [7, 6]], [[7, 7], [7, 0]]], [[[7, 7], [7, 7]], [[7, 8], [9, 9]]]])
+    compare(calculate_magnitude([[[[6, 6], [7, 6]], [[7, 7], [7, 0]]], [[[7, 7], [7, 7]], [[7, 8], [9, 9]]]]), expected=4140)
