@@ -1,12 +1,14 @@
 from testfixtures import compare, ShouldRaise
 
-from day21.day21 import DeterministicDie, Player, roll_to_win
+from day21.day21 import DeterministicDie, Player, roll_to_win, roll_to_win_dirac
 
 
 def test_deterministic_dice():
     die = DeterministicDie()
     for test_roll in range(1, 101):
         compare(die.roll(), expected=test_roll)
+
+    compare(die.roll(), expected=1)  # should be back to 1 again
 
 
 def test_player():
@@ -29,6 +31,7 @@ def test_player():
     with ShouldRaise(AssertionError):
         invalid_starting_position = 11
         _ = Player(invalid_starting_position)
+
 
 def test_example():
     player1 = Player(4)
@@ -71,6 +74,7 @@ def test_example():
     player1.move(die.roll() + die.roll() + die.roll())
     compare((player1.board_position, player1.score), expected=(10, 1000))  # player 1 wins
 
+
 def test__get_scores_and_rolls():
     die = DeterministicDie()
     player1 = Player(4)
@@ -79,3 +83,10 @@ def test__get_scores_and_rolls():
     compare(player1.score, expected=1000)
     compare(player2.score, expected=745)
     compare(die.rolls_so_far, expected=993)
+
+
+def test_roll_to_win_dirac():
+    compare(
+        roll_to_win_dirac(player1_start_position=4, player2_start_position=8),
+        expected=(444356092776315, 341960390180808)
+    )
