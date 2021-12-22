@@ -1,6 +1,8 @@
+import io
+
 from testfixtures import compare
 
-from day22.day21 import load_day22_data, ON, OFF, execute_steps, report_on, calc_on_cubes
+from day22.day21 import load_day22_data, ON, OFF, execute_steps
 
 
 def test__load_day22_data():
@@ -38,7 +40,7 @@ def test_execute_steps():
             (ON, (10, 12), (10, 12), (10, 12)),
         )
     )
-    actual = report_on(test_reactor)
+    actual = sorted(list(test_reactor))
     expected = [
         (10,10,10),
         (10,10,11),
@@ -76,7 +78,7 @@ def test_report_on():
             (ON, (10, 12), (10, 12), (10, 12)),
         )
     )
-    compare(calc_on_cubes(test_reactor), expected=27)
+    compare(len(test_reactor), expected=27)
 
 
 def test_execute_steps__ignores_outside_of_initialization_area():
@@ -85,9 +87,12 @@ def test_execute_steps__ignores_outside_of_initialization_area():
             (ON, (-55, -51), (-55, -51), (-55, -51)),
         )
     )
-    compare(calc_on_cubes(test_reactor), expected=0)
+    compare(len(test_reactor), expected=0)
 
 def test_integration():
     steps = load_day22_data("day22_test_data.txt")
     reactor = execute_steps(steps)
-    compare(calc_on_cubes(reactor), expected=590784)
+    compare(len(reactor), expected=590784)
+
+    reactor = execute_steps(steps, clip_to_cube=False)
+    compare(len(reactor), expected=590784)
