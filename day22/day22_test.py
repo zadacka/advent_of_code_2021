@@ -1,14 +1,11 @@
-import io
-
 from testfixtures import compare
 
-from day22.day22 import load_day22_data, ON, OFF, execute_steps
+from day22 import load_day22_data, ON, OFF, execute_steps
 
 
 def test__load_day22_data():
     actual = load_day22_data("day22_test_data.txt")
-    expected = (
-        (ON, (-20, 26), (-36, 17), (-47, 7)),
+    expected = (        (ON, (-20, 26), (-36, 17), (-47, 7)),
         (ON, (-20, 33), (-21, 23), (-26, 28)),
         (ON, (-22, 28), (-29, 23), (-38, 16)),
         (ON, (-46, 7), (-6, 46), (-50, -1)),
