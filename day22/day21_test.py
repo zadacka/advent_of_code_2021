@@ -94,5 +94,5 @@ def test_integration():
     reactor = execute_steps(steps)
     compare(len(reactor), expected=590784)
 
-    reactor = execute_steps(steps, clip_to_cube=False)
-    compare(len(reactor), expected=590784)
+    # reactor = execute_steps(steps, include_bounding)
+    # compare(len(reactor), expected=590784)

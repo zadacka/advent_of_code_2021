@@ -25,24 +25,23 @@ def load_day22_data(filename):
 cube_size = 50
 
 
-def make_range(dim_range, clip_to_cube=True):
+def make_range(dim_range):
     range_min, range_max = dim_range
-    if clip_to_cube:
-        range_min = max(-cube_size, range_min)
-        range_max = min(cube_size, range_max)
+    range_min = max(-cube_size, range_min)
+    range_max = min(cube_size, range_max)
     if range_max >= range_min:
         return range_min, range_max + 1
     else:
         return None
 
 
-def execute_steps(steps, clip_to_cube=True):
+def execute_steps(steps):
     cube = set()
     for step in steps:
         state, x_range, y_range, z_range = step
-        x_range = make_range(x_range, clip_to_cube=clip_to_cube)
-        y_range = make_range(y_range, clip_to_cube=clip_to_cube)
-        z_range = make_range(z_range, clip_to_cube=clip_to_cube)
+        x_range = make_range(x_range)
+        y_range = make_range(y_range)
+        z_range = make_range(z_range)
         if x_range and y_range and z_range:
             for x in range(*x_range):
                 for y in range(*y_range):
@@ -53,6 +52,7 @@ def execute_steps(steps, clip_to_cube=True):
                             if (x, y, z) in cube:
                                 cube.remove((x, y, z))
     return cube
+
 
 if __name__ == '__main__':
     steps = load_day22_data("day22_real_data.txt")
