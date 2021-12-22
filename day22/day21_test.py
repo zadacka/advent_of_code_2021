@@ -86,3 +86,8 @@ def test_execute_steps__ignores_outside_of_initialization_area():
         )
     )
     compare(calc_on_cubes(test_reactor), expected=0)
+
+def test_integration():
+    steps = load_day22_data("day22_test_data.txt")
+    reactor = execute_steps(steps)
+    compare(calc_on_cubes(reactor), expected=590784)
