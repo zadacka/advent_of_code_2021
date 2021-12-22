@@ -2,7 +2,7 @@ import io
 
 from testfixtures import compare
 
-from day22.day21 import load_day22_data, ON, OFF, execute_steps
+from day22.day22 import load_day22_data, ON, OFF, execute_steps
 
 
 def test__load_day22_data():
