@@ -1,4 +1,10 @@
 import os
+from cmath import inf
+from collections import defaultdict
+from copy import deepcopy
+from operator import itemgetter
+
+from memoized import memoized
 
 anthropod2energy = {
     "A": 1,
@@ -13,6 +19,8 @@ anthropod2room = {
     "C": 6,
     "D": 8,
 }
+
+memo = dict()
 
 allowed_corridor_locations = (0, 0), (1, 0), (3, 0), (5, 0), (7, 0), (9, 0), (10, 0)
 corridor_end = allowed_corridor_locations[-1][0]
@@ -98,3 +106,42 @@ def load_day23_data(filename):
     return corridor, anthropods
 
 
+def anthropods2tuple(anthropods):
+    anthropod_list = [(a.x, a.y, a.type) for a in anthropods]
+    return tuple(sorted(anthropod_list, key=itemgetter(0, 1, 2)))
+
+def set2anthropods(anthropods):
+    return [Anthropod(type, x, y) for (x, y, type) in anthropods]
+
+
+@memoized
+def play_game(anthropod_tuple):
+    anthropods = set2anthropods(anthropod_tuple)
+
+    # print_map(anthropods)
+    if not any(a.get_allowed_moves(anthropods) for a in anthropods):
+        if all(a.at_home for a in anthropods):
+            return 0
+        else:
+            return inf
+
+    costs = []
+    for index, a in enumerate(anthropods):
+        allowed_moves = a.get_allowed_moves(anthropods)
+        for move in allowed_moves:
+            target_x, target_y = move
+            cost = (abs(a.x - target_x) + abs(a.y - target_y)) * anthropod2energy[a.type]
+            anthropods2 = deepcopy(anthropods)
+            anthropods2[index].x = target_x
+            anthropods2[index].y = target_y
+            cost2end = play_game(anthropods2tuple(anthropods2))
+            costs.append(cost + cost2end)
+    # key = anthropods2set(anthropods)
+    # memo[key] = min(memo.get(key, min(costs) + 1), min(costs))
+    return min(costs)
+
+if __name__ == '__main__':
+    coridoor, anthropods = load_day23_data("day23_real_data.txt")
+    anthrpods_tuple = anthropods2tuple(anthropods)
+
+    print("Moving all of the anthropods home takes {} energy".format(play_game(anthrpods_tuple)))
