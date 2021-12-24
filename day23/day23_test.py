@@ -97,7 +97,7 @@ def print_map(anthropods):
 def string2anthropods(string):
     floormap = string.split("\n")
     anthropods = []
-    for y in range(0, 3):
+    for y in range(0, 5):
         for index, c in enumerate(floormap[y + 1]):
             if c in anthropod2energy:
                 anthropod = Anthropod(type=c, x=index - 1, y=y)
@@ -106,82 +106,83 @@ def string2anthropods(string):
 
 def test_play_example_game():
     # corridor, anthropods = load_day23_data("day23_test_data.txt")
-    # results = play_game(anthropods)
-    # compare(results, expected=12521)
-
-    penultimate_floormap = """\
+    # results = play_game(anthropods2tuple(anthropods))
+    # compare(results, expected=44169)
+    floormap = """\
 #############
-#.........A.#
-###.#B#C#D###
+#...........#
+###A#B#C#D###
+  #A#B#C#D#
+  #A#B#C#D#
   #A#B#C#D#
   #########
 """
-    anthropods = string2anthropods(penultimate_floormap)
-    compare(play_game(anthropods), expected=8)
-
-    penultimate_floormap = """\
-#############
-#.....D.D.A.#
-###.#B#C#.###
-  #A#B#C#.#
-  #########
-"""
-
-    anthropods = string2anthropods(penultimate_floormap)
-    compare(play_game(anthropods), expected=7008)
-
-
-    penultimate_floormap = """\
-#############
-#.....D.....#
-###.#B#C#D###
-  #A#B#C#A#
-  #########
-"""
-    anthropods = string2anthropods(penultimate_floormap)
-    compare(play_game(anthropods), expected=9011)
-
-    penultimate_floormap = """\
-#############
-#.....D.....#
-###B#.#C#D###
-  #A#B#C#A#
-  #########
-"""
-    anthropods = string2anthropods(penultimate_floormap)
-    compare(play_game(anthropods), expected=9051)
-
-
-    penultimate_floormap = """\
-#############
-#...B.......#
-###B#.#C#D###
-  #A#D#C#A#
-  #########
-"""
-    anthropods = string2anthropods(penultimate_floormap)
-    compare(play_game(anthropods), expected=12081)
-
-
-    penultimate_floormap = """\
-#############
-#...B.......#
-###B#C#.#D###
-  #A#D#C#A#
-  #########
+    anthropods = string2anthropods(floormap)
+    compare(play_game(anthropods), expected=0)
+#
+#     penultimate_floormap = """\
+# #############
+# #.....D.D.A.#
+# ###.#B#C#.###
+#   #A#B#C#.#
+#   #########
 # """
-    anthropods = string2anthropods(penultimate_floormap)
-    compare(play_game(anthropods), expected=12481)
-
-
-
-    penultimate_floormap = """\
-#############
-#...........#
-###B#C#B#D###
-  #A#D#C#A#
-  #########
-"""
-    anthropods = string2anthropods(penultimate_floormap)
-    compare(play_game(anthropods), expected=12521)
-
+#
+#     anthropods = string2anthropods(penultimate_floormap)
+#     compare(play_game(anthropods), expected=7008)
+#
+#
+#     penultimate_floormap = """\
+# #############
+# #.....D.....#
+# ###.#B#C#D###
+#   #A#B#C#A#
+#   #########
+# """
+#     anthropods = string2anthropods(penultimate_floormap)
+#     compare(play_game(anthropods), expected=9011)
+#
+#     penultimate_floormap = """\
+# #############
+# #.....D.....#
+# ###B#.#C#D###
+#   #A#B#C#A#
+#   #########
+# """
+#     anthropods = string2anthropods(penultimate_floormap)
+#     compare(play_game(anthropods), expected=9051)
+#
+#
+#     penultimate_floormap = """\
+# #############
+# #...B.......#
+# ###B#.#C#D###
+#   #A#D#C#A#
+#   #########
+# """
+#     anthropods = string2anthropods(penultimate_floormap)
+#     compare(play_game(anthropods), expected=12081)
+#
+#
+#     penultimate_floormap = """\
+# #############
+# #...B.......#
+# ###B#C#.#D###
+#   #A#D#C#A#
+#   #########
+# # """
+#     anthropods = string2anthropods(penultimate_floormap)
+#     compare(play_game(anthropods), expected=12481)
+#
+#
+#
+#     penultimate_floormap = """\
+# #############
+# #...........#
+# ###B#C#B#D###
+#   #A#D#C#A#
+#   #########
+# """
+#     anthropods = string2anthropods(penultimate_floormap)
+#     compare(play_game(anthropods), expected=12521)
+#

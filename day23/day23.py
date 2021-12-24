@@ -50,24 +50,49 @@ class Anthropod(object):
             blockers_home = [a.x for a in anthropods if a.y == 0 and start < a.x < end]
             if blockers_home:
                 return []  # no way home
+            h4_correct = any(a for a in anthropods if a.y == 4 and a.x == home_room and a.type == self.type)
+            h3_correct = any(a for a in anthropods if a.y == 3 and a.x == home_room and a.type == self.type)
+            h2_correct = any(a for a in anthropods if a.y == 2 and a.x == home_room and a.type == self.type)
             if not any(a for a in anthropods if a.y == 1 and a.x == home_room):
                 if not any(a for a in anthropods if a.y == 2 and a.x == home_room):
-                    return [(home_room, 2), ]
-                if any(a for a in anthropods if a.y == 2 and a.x == home_room and a.type == self.type):
+                    if not any(a for a in anthropods if a.y == 3 and a.x == home_room):
+                        if not any(a for a in anthropods if a.y == 4 and a.x == home_room):
+                            return [(home_room, 4), ]
+                        elif h4_correct:
+                            return [(home_room, 3), ]
+                    elif h4_correct and h3_correct:
+                        return [(home_room, 2), ]
+                elif h4_correct and h3_correct and h2_correct:
                     return [(home_room, 1), ]
             return []
 
-        if self.y == 2:
+        if self.y == 4:
             if anthropod2room[self.type] == self.x:
                 return []  # already in the right place!
-            elif any(a.x == self.x and a.y == 1 for a in anthropods):
+            elif any(a.x == self.x and a.y in (3,2,1) for a in anthropods):
                 return []  # no allowed moves - blocked in!
             else:
                 return routes_out()
 
+        if self.y == 3:
+            if any(a.x == self.x and a.y in (1, 2) for a in anthropods):
+                return []  # no allowed moves - blocked in!
+            elif self.x == anthropod2room[self.type] and self.pos4full(anthropods):
+                return []  # correct place!
+            else:
+                return routes_out()
+
+        if self.y == 2:
+            if any(a.x == self.x and a.y == 1 for a in anthropods):
+                return []  # no allowed moves - blocked in!
+            elif self.x == anthropod2room[self.type] and self.pos4full(anthropods) and self.pos3full(anthropods):
+                return []  # correct place!
+            else:
+                return routes_out()
+
         if self.y == 1:
-            if self.x == anthropod2room[self.type]:  # top of home room
-                if any(a for a in anthropods if a.type == self.type and a.x == self.x and a.y == 2):
+            if self.x == anthropod2room[self.type]:  # in home room
+                if self.pos2full(anthropods) and self.pos3full(anthropods) and self.pos4full(anthropods):
                     return []  # home room is full!
             return routes_out()
 
@@ -76,9 +101,18 @@ class Anthropod(object):
 
         raise ValueError("Really should ever reach here.")
 
+    def pos2full(self, anthropods):
+        return any(a for a in anthropods if a.type == self.type and a.x == self.x and a.y == 2)
+
+    def pos3full(self, anthropods):
+        return any(a for a in anthropods if a.type == self.type and a.x == self.x and a.y == 3)
+
+    def pos4full(self, anthropods):
+        return any(a for a in anthropods if a.type == self.type and a.x == self.x and a.y == 4)
+
     @property
     def at_home(self):
-        return self.y in (1, 2) and self.x == anthropod2room[self.type]
+        return self.y in (1, 2,3,4) and self.x == anthropod2room[self.type]
 
 
 
@@ -98,7 +132,7 @@ def load_day23_data(filename):
         floormap = f.readlines()
 
     corridor = [0 for c in floormap[1] if c == '.']
-    for y in range(1, 3):
+    for y in range(1, 5):
         for index, c in enumerate(floormap[y + 1]):
             if c in anthropod2energy:
                 anthropod = Anthropod(type=c, x=index - 1, y=y)
