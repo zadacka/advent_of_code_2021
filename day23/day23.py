@@ -58,6 +58,9 @@ class Anthropod(object):
                 return routes_out()
 
         if self.y == 1:
+            if self.x == anthropod2room[self.type]:  # top of home room
+                if any(a for a in anthropods if a.type == self.type and a.x == self.x and a.y == 2):
+                    return []  # home room is full!
             return routes_out()
 
         if self.y == 0:
@@ -65,12 +68,10 @@ class Anthropod(object):
 
         raise ValueError("Really should ever reach here.")
 
-        # if self.y == 2 and any(a.x == self.x and a.y == 1 for a in anthropods):
-        #     return []  # no allowed moves - blocked in!
-        # elif self.y == 0:
-        #     pass  # todo
-        # else:
-        #     coridoor_left =
+    @property
+    def at_home(self):
+        return self.y in (1, 2) and self.x == anthropod2room[self.type]
+
 
 
 def load_day23_data(filename):
@@ -95,3 +96,5 @@ def load_day23_data(filename):
                 anthropod = Anthropod(type=c, x=index - 1, y=y)
                 anthropods.append(anthropod)
     return corridor, anthropods
+
+
